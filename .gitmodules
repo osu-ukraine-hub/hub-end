@@ -1,0 +1,3 @@
+[submodule "hub-front"]
+	path = hub-front
+	url = https://github.com/osu-ukraine-hub/hub-front.git
