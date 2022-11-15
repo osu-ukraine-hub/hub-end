@@ -1,6 +1,8 @@
+import { MappoolMapEntity } from './mappoolMap.entity';
+import { TournamentEntity } from './tournament.entity';
 import { UserEntity } from './user.entity';
 
-const entities = [UserEntity];
+const entities = [UserEntity, TournamentEntity, MappoolMapEntity];
 
-export { UserEntity };
+export { UserEntity, TournamentEntity as Tournament, MappoolMapEntity as Mappool };
 export default entities;

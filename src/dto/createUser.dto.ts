@@ -7,5 +7,5 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsNumber()
-  osu_id: number;
+  osuId: number;
 }

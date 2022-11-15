@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import * as Strategy from 'passport-osu';
 import { CreateUserDto } from 'src/dto/createUser.dto';
+import { UserEntity } from 'src/entities';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -19,10 +20,14 @@ export default class OsuStrategy extends PassportStrategy(Strategy.default) {
     });
   }
 
-  async validate(accessToken, refreshToken, profile) {
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: Strategy.PassportProfile,
+  ): Promise<UserEntity> {
     const createUserDto: CreateUserDto = {
       username: profile.displayName,
-      osu_id: profile.id,
+      osuId: profile.id,
     };
 
     return this.authService.authorize(createUserDto);

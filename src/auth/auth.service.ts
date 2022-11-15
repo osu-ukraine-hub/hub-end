@@ -12,23 +12,19 @@ export class AuthService {
   ) {}
 
   async authorize(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { osu_id } = createUserDto;
-    const user = await this.usersService.findByOsuId(osu_id);
+    const { osuId } = createUserDto;
+    const user = await this.usersService.findByOsuId(osuId);
 
-    if (user) {
-      return user;
-    } else {
-      const newUser = await this.usersService.createUser(createUserDto);
+    if (!user) return await this.usersService.createUser(createUserDto);
 
-      return newUser;
-    }
+    return user;
   }
 
   async login(user: UserEntity) {
     const payload = {
       id: user.id,
       username: user.username,
-      osu_id: user.osu_id,
+      osuId: user.osuId,
     };
     return {
       access_token: this.jwtService.sign(payload),

@@ -1,19 +1,20 @@
 import { Exclude } from 'class-transformer';
 import { Permissions } from 'src/enums/permissions.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { TournamentEntity } from './tournament.entity';
 
-@Entity()
+@Entity("users")
 export class UserEntity {
   @PrimaryGeneratedColumn({
     type: 'bigint',
-    name: 'user_id',
+    name: 'id',
   })
   id: number;
 
   @Column({
     nullable: false,
   })
-  osu_id: number;
+  osuId: number;
 
   @Column({
     nullable: false,
@@ -36,4 +37,7 @@ export class UserEntity {
     default: Permissions.User,
   })
   permissions: Permissions;
+
+  @OneToMany(() => TournamentEntity, (tournament) => tournament.creator)
+  tournaments: TournamentEntity[];
 }

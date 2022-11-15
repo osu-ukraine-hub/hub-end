@@ -1,6 +1,13 @@
-import { Res, Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Res,
+  Controller,
+  Get,
+  UseGuards,
+  Req,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { UserEntity } from 'src/entities';
 import { User } from 'src/users/users.decorator';
 import { AuthService } from './auth.service';
@@ -17,8 +24,14 @@ export class AuthController {
   @UseGuards(AuthGuard('osu'))
   async callback(
     @User() user: UserEntity,
+    @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
+    if (req.cookies && 'token' in req.cookies && req.cookies.token.length > 0)
+      return new BadRequestException({
+        info: 'Already Authorized!',
+      });
+
     const { access_token } = await this.authService.login(user);
 
     response.cookie('token', access_token);

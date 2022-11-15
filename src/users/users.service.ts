@@ -20,7 +20,7 @@ export class UsersService {
     return await this.userRepository.findOneBy({ id: user_id });
   }
 
-  async findByOsuId(osu_id: number): Promise<UserEntity> | null {
-    return await this.userRepository.findOneBy({ osu_id: osu_id });
+  async findByOsuId(osuId: number): Promise<UserEntity> | null {
+    return await this.userRepository.findOneBy({ osuId: osuId });
   }
 }

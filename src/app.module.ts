@@ -2,13 +2,14 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import entities from './entities';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TournamentsController } from './tournaments/tournaments.controller';
+import { TournamentsModule } from './tournaments/tournaments.module';
 
 @Module({
   imports: [
@@ -30,8 +31,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     }),
     AuthModule,
     UsersModule,
+    TournamentsModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, UsersController, TournamentsController],
   providers: [
     AppService,
     {
