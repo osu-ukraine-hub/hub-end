@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -29,10 +30,11 @@ export class TournamentEntity {
   description: string;
 
   @OneToMany(() => MappoolMapEntity, (mappool) => mappool.tournament, {
-    eager: true
+    eager: true, cascade: true
   })
   mappool: MappoolMapEntity[];
 
   @ManyToOne(() => UserEntity, (user) => user.tournaments, { eager: true })
+  @JoinColumn({name: 'creatorId', referencedColumnName: 'id'})
   creator: UserEntity;
 }

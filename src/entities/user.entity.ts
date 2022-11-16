@@ -38,6 +38,6 @@ export class UserEntity {
   })
   permissions: Permissions;
 
-  @OneToMany(() => TournamentEntity, (tournament) => tournament.creator)
+  @OneToMany(() => TournamentEntity, (tournament) => tournament.creator, { cascade: true })
   tournaments: TournamentEntity[];
 }

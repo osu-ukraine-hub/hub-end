@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { Expose } from 'class-transformer';
 import { JwtAuthGuard } from 'src/auth/jwtAuth.guard';
 import { CreateTournamentDto } from 'src/dto/createTournament.dto';
@@ -17,6 +17,17 @@ export class TournamentsController {
     @Body() createTournamentDto: CreateTournamentDto,
   ): Promise<Tournament> {
     const tournament = await this.service.createTournament(createTournamentDto, user);
+
+    return tournament;
+  }
+
+  @Get('/:id')
+  @Expose()
+  @UseGuards(JwtAuthGuard)
+  async getSingleTournament(
+    @Param('id') id: number,
+  ): Promise<Tournament> {
+    const tournament = await this.service.getSingleTournamentById(id);
 
     return tournament;
   }

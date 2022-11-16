@@ -26,6 +26,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
         entities: entities,
         synchronize: true,
         autoLoadEntities: true,
+        logging: true,
       }),
       inject: [ConfigService],
     }),

@@ -13,12 +13,18 @@ export class TournamentsService {
   async createTournament(createTournamentDto: CreateTournamentDto, creator: UserEntity): Promise<Tournament> {
     const { title, description, mappool } = createTournamentDto;
 
-    const tournament = this.tournamentRepository.save({
+    const tournament = await this.tournamentRepository.save({
       title: title,
       description: description,
       mappool: mappool,
       creator: creator,
     });
+
+    return tournament;
+  }
+
+  async getSingleTournamentById(tournamentId: number): Promise<Tournament> {
+    const tournament = await this.tournamentRepository.findOneBy({ id: tournamentId });
 
     return tournament;
   }

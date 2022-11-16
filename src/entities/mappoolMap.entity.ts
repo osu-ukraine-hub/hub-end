@@ -4,7 +4,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -14,7 +13,8 @@ import { UserEntity } from './user.entity';
 
 @Entity("mappool_maps")
 export class MappoolMapEntity {
-  @PrimaryGeneratedColumn({ name: 'id', type: 'int4' })
+  @Exclude()
+  @PrimaryGeneratedColumn({ name: 'id', type: 'int4'})
   id: number;
 
   @Column({
@@ -25,8 +25,7 @@ export class MappoolMapEntity {
   })
   pick: mappoolPicks;
 
-  @ManyToOne(() => TournamentEntity, (tournament) => tournament)
-  @JoinColumn()
+  @ManyToOne(() => TournamentEntity, (tournament) => tournament.mappool)
   tournament: TournamentEntity;
 
   @Column({
@@ -35,9 +34,8 @@ export class MappoolMapEntity {
   mapId: number;
 
   @OneToOne(() => UserEntity, { eager: true })
-  @JoinTable()
-  @Exclude()
-  pickedBy?: UserEntity;
+  @JoinColumn({name: 'pickedById', referencedColumnName: 'id'})
+  pickedBy: UserEntity;
 
   @Column({
     nullable: false,
