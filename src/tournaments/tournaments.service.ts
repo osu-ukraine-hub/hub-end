@@ -1,4 +1,4 @@
-import { Injectable, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTournamentDto } from 'src/dto/createTournament.dto';
 import { Tournament, UserEntity } from 'src/entities';

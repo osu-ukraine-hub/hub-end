@@ -10,6 +10,7 @@ import entities from './entities';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TournamentsController } from './tournaments/tournaments.controller';
 import { TournamentsModule } from './tournaments/tournaments.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
     AuthModule,
     UsersModule,
     TournamentsModule,
+    NewsModule,
   ],
   controllers: [AppController, UsersController, TournamentsController],
   providers: [
