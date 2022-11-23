@@ -3,6 +3,7 @@ import { Expose } from 'class-transformer';
 import { JwtAuthGuard } from 'src/auth/jwtAuth.guard';
 import { CreateTournamentDto } from 'src/dto/createTournament.dto';
 import { Tournament, UserEntity } from 'src/entities';
+import { Permissions } from 'src/permissions/permissions.decorator';
 import { User } from 'src/users/users.decorator';
 import { TournamentsService } from './tournaments.service';
 
@@ -12,6 +13,7 @@ export class TournamentsController {
   
   @Post('create')
   @UseGuards(JwtAuthGuard)
+  @Permissions('admin', 'host')
   async createTournament(
     @User() user: UserEntity,
     @Body() createTournamentDto: CreateTournamentDto,
@@ -24,6 +26,7 @@ export class TournamentsController {
   @Get('/:id')
   @Expose()
   @UseGuards(JwtAuthGuard)
+
   async getSingleTournament(
     @Param('id') id: number,
   ): Promise<Tournament> {

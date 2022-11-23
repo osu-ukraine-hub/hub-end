@@ -1,6 +1,12 @@
-import { Type } from "class-transformer";
-import { ArrayMaxSize, ArrayMinSize, IsArray, isArray, IsNotEmpty, isNotEmptyObject, ValidateNested } from "class-validator";
-import { MappoolMapEntity } from "src/entities/mappoolMap.entity";
+import { Type } from 'class-transformer';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+import MappoolMapDto from './mappoolMap.dto';
 
 export class CreateTournamentDto {
   @IsNotEmpty()
@@ -13,6 +19,6 @@ export class CreateTournamentDto {
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
   @ArrayMaxSize(18)
-  @Type(() => MappoolMapEntity)
-  mappool: MappoolMapEntity[]
+  @Type(() => MappoolMapDto)
+  mappool: MappoolMapDto[];
 }

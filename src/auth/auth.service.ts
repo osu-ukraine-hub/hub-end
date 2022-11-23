@@ -26,6 +26,7 @@ export class AuthService {
       username: user.username,
       osuId: user.osuId,
     };
+
     return {
       access_token: this.jwtService.sign(payload),
     };

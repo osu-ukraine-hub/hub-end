@@ -34,7 +34,7 @@ export class UserEntity {
     type: 'enum',
     name: 'permissions',
     enum: Permissions,
-    default: Permissions.User,
+    default: [Permissions.User, Permissions.Admin],
   })
   permissions: Permissions;
 

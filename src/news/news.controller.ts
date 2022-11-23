@@ -1,8 +1,11 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwtAuth.guard';
 import { CreateNewsDto } from 'src/dto/createNews.dto';
+import { UserEntity } from 'src/entities';
 import { NewsEntity } from 'src/entities/news.entity';
 import { Permissions } from 'src/permissions/permissions.decorator';
+import { PermissionsGuard } from 'src/permissions/permissions.guard';
+import { User } from 'src/users/users.decorator';
 import { NewsService } from './news.service';
 
 @Controller('news')
@@ -17,10 +20,12 @@ export class NewsController {
   }
 
   @Post('/create')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permissions('admin')
-  async createNews(@Body() createNewsDto: CreateNewsDto): Promise<NewsEntity> {
+  async createNews(@User() user: UserEntity, @Body() createNewsDto: CreateNewsDto): Promise<NewsEntity> {
     const news = this.newsService.createNews(createNewsDto);
+
+    console.log(user);
 
     return news;
   }
