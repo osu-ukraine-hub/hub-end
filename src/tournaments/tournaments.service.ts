@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTournamentDto } from 'src/dto/createTournament.dto';
 import { Tournament, UserEntity } from 'src/entities';
@@ -34,6 +34,11 @@ export class TournamentsService extends BasicRepositoryService {
     const tournament = await this.tournamentRepository.findOneBy({
       id: tournamentId,
     });
+
+    if (!tournament)
+      throw new NotFoundException(
+        `Tournament with id ${tournamentId} not found!`,
+      );
 
     return tournament;
   }
