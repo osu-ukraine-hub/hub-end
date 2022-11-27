@@ -13,7 +13,7 @@ services:
     ports:
       - 5432:5432
     networks:
-      - postgres
+      - api
     restart: unless-stopped
   hub_pgadmin:
     container_name: pgadmin
@@ -27,7 +27,7 @@ services:
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
-      - postgres
+      - api
     depends_on:
       - hub_postgres
     restart: unless-stopped
@@ -38,7 +38,7 @@ services:
     ports:
       - 8080:8080
     networks:
-      - postgres
+      - api
     depends_on:
       - hub_postgres
     env_file:
@@ -50,12 +50,12 @@ services:
     ports:
       - 3000:3000
     networks:
-      - postgres
+      - api
     depends_on:
       - osu_ua_backend
 
 networks:
-  postgres:
+  api:
     driver: bridge
 volumes:
   postgres:
