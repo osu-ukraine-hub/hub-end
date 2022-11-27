@@ -10,7 +10,7 @@ import { TournamentsService } from './tournaments.service';
 @Controller('tournaments')
 export class TournamentsController {
   constructor(public service: TournamentsService) {}
-  
+
   @Post('create')
   @UseGuards(JwtAuthGuard)
   @Permissions('admin', 'host')
@@ -18,7 +18,10 @@ export class TournamentsController {
     @User() user: UserEntity,
     @Body() createTournamentDto: CreateTournamentDto,
   ): Promise<Tournament> {
-    const tournament = await this.service.createTournament(createTournamentDto, user);
+    const tournament = await this.service.createTournament(
+      createTournamentDto,
+      user,
+    );
 
     return tournament;
   }
@@ -26,10 +29,7 @@ export class TournamentsController {
   @Get('/:id')
   @Expose()
   @UseGuards(JwtAuthGuard)
-
-  async getSingleTournament(
-    @Param('id') id: number,
-  ): Promise<Tournament> {
+  async getSingleTournament(@Param('id') id: number): Promise<Tournament> {
     const tournament = await this.service.getSingleTournamentById(id);
 
     return tournament;

@@ -1,0 +1,64 @@
+version: "3.8"
+services:
+  hub_postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=gownina727
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - postgres
+    restart: unless-stopped
+  hub_pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    depends_on:
+      - hub_postgres
+    restart: unless-stopped
+  osu_ua_backend:
+    container_name: backend
+    build: .
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    networks:
+      - postgres
+    depends_on:
+      - hub_postgres
+    env_file:
+      - ./.env
+  osu_ua_frontend:
+    container_name: frontend
+    build: hub-front
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - postgres
+    depends_on:
+      - osu_ua_backend
+
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  postgres:
+    driver: local
+  pgadmin:
+    driver: local

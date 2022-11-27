@@ -22,5 +22,12 @@
         "name": "@nestjs/swagger/plugin"
       }
     ],
-  }
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "hub-front",
+    "dist"
+  ]
 }

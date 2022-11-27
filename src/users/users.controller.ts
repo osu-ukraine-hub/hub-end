@@ -2,6 +2,7 @@ import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { Expose } from 'class-transformer';
 import { JwtAuthGuard } from 'src/auth/jwtAuth.guard';
 import { UserEntity } from 'src/entities';
+import { Permissions } from 'src/permissions/permissions.decorator';
 import { User } from './users.decorator';
 import { UsersService } from './users.service';
 
@@ -21,7 +22,8 @@ export class UsersController {
 
   @Get('/:id')
   @UseGuards(JwtAuthGuard)
-  async getUserWithId(@Param('id') id: number) {
+  @Permissions('admin')
+  async getUserWithId(@Param('id') id: number): Promise<UserEntity> {
     return await this.usersService.findById(
       id,
       this.usersService.getAllRelations(),
