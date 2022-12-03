@@ -1,5 +1,4 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
@@ -11,12 +10,24 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TournamentsController } from './tournaments/tournaments.controller';
 import { TournamentsModule } from './tournaments/tournaments.module';
 import { NewsModule } from './news/news.module';
+import { PollsModule } from './polls/polls.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    RedisModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        config: {
+          host: configService.get('REDIS_HOST'),
+          port: +configService.get<number>('REDIS_PORT'),
+          password: configService.get('REDIS_PASSWORD'),
+          username: configService.get('REDIS_USER'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
@@ -35,8 +46,9 @@ import { NewsModule } from './news/news.module';
     UsersModule,
     TournamentsModule,
     NewsModule,
+    PollsModule,
   ],
-  controllers: [AppController, UsersController, TournamentsController],
+  controllers: [UsersController, TournamentsController],
   providers: [
     AppService,
     {

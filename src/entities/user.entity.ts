@@ -1,9 +1,17 @@
 import { Exclude } from 'class-transformer';
 import { Permissions } from 'src/enums/permissions.enum';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { PollEntity } from './poll.entity';
 import { TournamentEntity } from './tournament.entity';
 
-@Entity("users")
+@Entity('users')
 export class UserEntity {
   @PrimaryGeneratedColumn({
     type: 'bigint',
@@ -38,6 +46,12 @@ export class UserEntity {
   })
   permissions: Permissions;
 
-  @OneToMany(() => TournamentEntity, (tournament) => tournament.creator, { cascade: true })
+  @ManyToMany(() => PollEntity, (poll) => poll.participants, { cascade: true })
+  @JoinTable()
+  polls: PollEntity[];
+
+  @OneToMany(() => TournamentEntity, (tournament) => tournament.creator, {
+    cascade: true,
+  })
   tournaments: TournamentEntity[];
 }
