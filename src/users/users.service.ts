@@ -4,6 +4,8 @@ import { CreateUserDto } from 'src/dto/createUser.dto';
 import { UserEntity } from 'src/entities';
 import BasicRepositoryService from 'src/types/basicRepositoryService';
 import { Repository } from 'typeorm';
+import { v2 } from 'osu-api-extended';
+import BanchoUserResponse from 'src/types/banchoUserResponse';
 
 @Injectable()
 export class UsersService extends BasicRepositoryService {
@@ -37,5 +39,43 @@ export class UsersService extends BasicRepositoryService {
       where: { osuId: osuId },
       relations: relations,
     });
+  }
+
+  async findOrCreate(userClause: {
+    username: string;
+    id: number;
+  }): Promise<UserEntity> {
+    let user = await this.userRepository.findOneBy([
+      { id: userClause.id },
+      { osuId: userClause.id },
+    ]);
+
+    if (!user)
+      user = await this.createUser({
+        username: userClause.username,
+        osuId: userClause.id,
+      });
+
+    return user;
+  }
+
+  async findBanchoUser(query: string): Promise<BanchoUserResponse[]> {
+    const ret: BanchoUserResponse[] = [];
+    const response = await v2.site.search({
+      mode: 'user',
+      query: query,
+    });
+
+    for (let user of response.user.data) {
+      if (user.country_code !== 'UA') continue;
+
+      ret.push({
+        id: user.id,
+        username: user.username,
+        avatar_url: user.avatar_url,
+      });
+    }
+
+    return ret;
   }
 }

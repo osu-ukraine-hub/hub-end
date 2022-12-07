@@ -1,5 +1,7 @@
+import { UserEntity } from "src/entities";
+
 export default interface Leaderboard {
   rank: number;
-  userId: number;
   score: number;
+  user: UserEntity;
 }

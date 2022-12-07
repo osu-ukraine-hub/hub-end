@@ -4,10 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
 import { chunk } from 'lodash';
 import { CreatePollDto } from 'src/dto/createPoll.dto';
-import { PollVoteDto } from 'src/dto/pollVote.dto';
+import { PollVoteDto, PollVoteUser } from 'src/dto/pollVote.dto';
 import { Poll, UserEntity } from 'src/entities';
 import BasicRepositoryService from 'src/types/basicRepositoryService';
 import Leaderboard from 'src/types/parsedLeaderboard';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -18,6 +19,7 @@ export class PollsService extends BasicRepositoryService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     @InjectRedis() private readonly redis: Redis,
+    private readonly usersService: UsersService,
   ) {
     super(pollRepository);
   }
@@ -54,10 +56,15 @@ export class PollsService extends BasicRepositoryService {
     await this.userRepository.save(user);
 
     for (let key in pollVoteDto) {
-      let users: number[] = pollVoteDto[key];
+      let electeds: PollVoteUser[] = pollVoteDto[key];
 
-      for (let user of users) {
-        await this.addScore(pollId, user, parseInt(key.at(0)));
+      for (let elected of electeds) {
+        elected = await this.usersService.findOrCreate({
+          id: elected.id,
+          username: elected.username,
+        });
+
+        await this.addScore(pollId, elected.id, parseInt(key.at(6)));
       }
     }
   }
@@ -70,7 +77,7 @@ export class PollsService extends BasicRepositoryService {
       'WITHSCORES',
     );
 
-    return this.parseLeaderboard(leaderboard);
+    return await this.parseLeaderboard(leaderboard);
   }
 
   async addScore(
@@ -81,13 +88,17 @@ export class PollsService extends BasicRepositoryService {
     await this.redis.zadd(`poll:${pollId}`, points, userId);
   }
 
-  parseLeaderboard(rawRanks: string[]): Leaderboard[] {
-    return chunk(rawRanks, 2).map((item, index) => {
-      return {
-        rank: index + 1,
-        userId: parseInt(item[0]),
-        score: parseInt(item[1]),
-      };
-    });
+  async parseLeaderboard(rawRanks: string[]): Promise<Leaderboard[]> {
+    return await Promise.all(
+      chunk(rawRanks, 2).map(async (item, index) => {
+        const user = await this.usersService.findById(parseInt(item[0]));
+
+        return {
+          rank: index + 1,
+          score: parseInt(item[1]),
+          user: user,
+        };
+      }),
+    );
   }
 }

@@ -26,15 +26,15 @@ export class AuthController {
     @User() user: UserEntity,
     @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
-  ) {
+  ): Promise<UserEntity> {
     if (req.cookies && 'token' in req.cookies && req.cookies.token.length > 0)
-      return new BadRequestException({
+      throw new BadRequestException({
         info: 'Already Authorized!',
       });
 
     const { access_token } = await this.authService.login(user);
 
     response.cookie('token', access_token);
-    response.redirect('/');
+    return user;
   }
 }

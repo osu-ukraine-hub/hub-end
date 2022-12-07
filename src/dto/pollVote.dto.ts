@@ -1,38 +1,73 @@
-import { IsNotEmptyObject, IsNumber, MaxLength, ArrayMaxSize, ArrayMinSize, arrayMaxSize } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNumber,
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  ValidateNested,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+
+export class PollVoteUser {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(24)
+  username: string;
+}
 
 export class PollVoteDto {
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
-  '7points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points7: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
-  '6points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points6: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(3)
-  '5points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points5: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(3)
-  '4points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points4: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(4)
-  '3points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points3: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(5)
-  '2points': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points2: PollVoteUser[];
 
-  @IsNumber({}, { each: true })
+  @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(6)
-  '1point': number[];
+  @ValidateNested({ each: true })
+  @Type(() => PollVoteUser)
+  points1: PollVoteUser[];
 }
