@@ -32,7 +32,7 @@ export class UsersController {
     );
   }
 
-  @Post('/search/bancho')
+  @Get('/search/bancho')
   @UseGuards(JwtAuthGuard)
   @Permissions('user')
   async serchBanchoUser(

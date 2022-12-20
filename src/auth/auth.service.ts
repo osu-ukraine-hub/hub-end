@@ -25,6 +25,7 @@ export class AuthService {
       id: user.id,
       username: user.username,
       osuId: user.osuId,
+      permissions: user.permissions,
     };
 
     return {
