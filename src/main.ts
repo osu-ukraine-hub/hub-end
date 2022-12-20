@@ -3,19 +3,13 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
-import { readFileSync } from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    httpsOptions: {
-      key: readFileSync('./localhost-key.pem'),
-      cert: readFileSync('./localhost.pem'),
-    },
-  });
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
   app.enableCors({
-    origin: "https://localhost:8081",
+    origin: "http://localhost:8081",
     methods: ['GET', 'PUT', 'POST', 'PATCH'],
     credentials: true,
     preflightContinue: false,
