@@ -22,6 +22,12 @@ export class PollEntity {
   @Column('text')
   content: string;
 
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  is_active: boolean;
+
   @ManyToMany(() => UserEntity, (user) => user.polls, { eager: true })
   participants: UserEntity[];
 

@@ -49,6 +49,11 @@ export class PollsService extends BasicRepositoryService {
   ): Promise<void> {
     const poll = await this.pollRepository.findOneBy({ id: pollId });
 
+    if (!poll.is_active)
+      throw new BadRequestException(
+        'This tournament is not active at the time!',
+      );
+
     if (poll.participants.find((participant) => participant.id == user.id))
       throw new BadRequestException('This user have already voted!');
 
