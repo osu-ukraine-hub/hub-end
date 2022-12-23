@@ -85,7 +85,7 @@ export class PollsService extends BasicRepositoryService {
     userId: number,
     points: number,
   ): Promise<void> {
-    await this.redis.zadd(`poll:${pollId}`, points, userId);
+    await this.redis.zincrby(`poll:${pollId}`, points, userId);
   }
 
   async parseLeaderboard(rawRanks: string[]): Promise<Leaderboard[]> {
