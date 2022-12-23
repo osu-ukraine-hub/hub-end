@@ -57,21 +57,36 @@ export class PollsService extends BasicRepositoryService {
     if (poll.participants.find((participant) => participant.id == user.id))
       throw new BadRequestException('This user have already voted!');
 
-    user.polls.push(poll);
-    await this.userRepository.save(user);
-
+    const pollVotes: { points: number; electeds: UserEntity[] }[] = [];
     for (let key in pollVoteDto) {
       let electeds: PollVoteUser[] = pollVoteDto[key];
 
-      for (let elected of electeds) {
-        elected = await this.usersService.findOrCreate({
-          id: elected.id,
-          username: elected.username,
-        });
+      pollVotes.push({
+        points: parseInt(key.at(6)),
+        electeds: await Promise.all(
+          electeds.map(async (elected) => {
+            const electedUser = await this.usersService.findOrCreate({
+              id: elected.id,
+              username: elected.username,
+            });
+            
+            if (electedUser.id == user.id)
+              throw new BadRequestException("You can't vote for yourself!");
 
-        await this.addScore(pollId, elected.id, parseInt(key.at(6)));
-      }
+            return electedUser; 
+          }),
+        ),
+      });
     }
+
+    for (let vote of pollVotes) {
+      vote.electeds.forEach(async (elected) => {
+        await this.addScore(pollId, elected.id, vote.points);
+      });
+    }
+
+    user.polls.push(poll);
+    await this.userRepository.save(user);
   }
 
   async getLeaderboard(pollId: number): Promise<Leaderboard[]> {
