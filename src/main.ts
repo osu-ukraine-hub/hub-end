@@ -7,9 +7,10 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
   app.use(cookieParser());
   app.enableCors({
-    origin: "http://localhost:8081",
+    origin: "https://osuua.sakuru.pw",
     methods: ['GET', 'PUT', 'POST', 'PATCH'],
     credentials: true,
     preflightContinue: false,
