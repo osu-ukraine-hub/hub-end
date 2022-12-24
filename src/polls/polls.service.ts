@@ -81,20 +81,24 @@ export class PollsService extends BasicRepositoryService {
       });
     }
 
+    const votesToSave: Vote[] = [];
     for (let vote of pollVotes) {
       vote.electeds.forEach(async (elected) => {
-        await this.voteRepository.save({
-          points: vote.points,
-          poll: poll,
-          voted_by: user,
-          voted_for: elected,
-        });
+        votesToSave.push(
+          this.voteRepository.create({
+            points: vote.points,
+            poll: poll,
+            voted_by: user,
+            voted_for: elected,
+          }),
+        );
 
         await this.addScore(pollId, elected.id, vote.points);
       });
     }
 
     user.polls.push(poll);
+    await this.voteRepository.save(votesToSave);
     await this.userRepository.save(user);
   }
 

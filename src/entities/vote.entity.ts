@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,7 +21,7 @@ export class VotesEntity {
   @Column()
   points: number;
 
-  @OneToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'votedBy', referencedColumnName: 'id' })
   voted_by: UserEntity;
 
@@ -28,7 +29,7 @@ export class VotesEntity {
   @JoinColumn({ name: 'votedFor', referencedColumnName: 'id' })
   voted_for: UserEntity;
 
-  @OneToOne(() => PollEntity, { eager: true })
+  @ManyToOne(() => PollEntity, { eager: true })
   @JoinColumn({ name: 'pollVoted', referencedColumnName: 'id' })
   poll: PollEntity;
 
