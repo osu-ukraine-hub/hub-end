@@ -83,7 +83,7 @@ export class PollsService extends BasicRepositoryService {
 
     for (let vote of pollVotes) {
       vote.electeds.forEach(async (elected) => {
-        await this.voteRepository.create({
+        await this.voteRepository.save({
           points: vote.points,
           poll: poll,
           voted_by: user,

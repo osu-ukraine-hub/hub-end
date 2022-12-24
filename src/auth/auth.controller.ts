@@ -19,14 +19,18 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('/logout')
-  @UseGuards(JwtAuthGuard)
   async logout(
+    @Req() req: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    response.clearCookie('token');
+    if (req.cookies && 'token' in req.cookies && req.cookies.token.length > 0) {
+      response.clearCookie('token');
 
-    return {
-      status: "Logged out successfully!"
+      return {
+        status: "Logged out successfully!"
+      }
+    } else {
+      throw new BadRequestException("User is currently not authorized.");
     }
   }
 
