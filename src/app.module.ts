@@ -38,7 +38,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
         entities: entities,
         synchronize: true,
         autoLoadEntities: true,
-        logging: true,
+        logging: (configService.get('DB_LOGGING') === 'true'),
       }),
       inject: [ConfigService],
     }),

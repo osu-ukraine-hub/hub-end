@@ -3,14 +3,16 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get<ConfigService>(ConfigService);
 
   app.setGlobalPrefix('api');
   app.use(cookieParser());
   app.enableCors({
-    origin: "https://osuua.sakuru.pw",
+    origin: configService.get('CORS_ORIGIN'),
     methods: ['GET', 'PUT', 'POST', 'PATCH'],
     credentials: true,
     preflightContinue: false,
