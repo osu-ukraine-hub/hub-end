@@ -5,7 +5,7 @@ import Redis from 'ioredis';
 import { chunk } from 'lodash';
 import { CreatePollDto } from 'src/dto/createPoll.dto';
 import { PollVoteDto, PollVoteUser } from 'src/dto/pollVote.dto';
-import { Poll, UserEntity } from 'src/entities';
+import { Poll, UserEntity, Vote } from 'src/entities';
 import BasicRepositoryService from 'src/types/basicRepositoryService';
 import Leaderboard from 'src/types/parsedLeaderboard';
 import { UsersService } from 'src/users/users.service';
@@ -16,6 +16,8 @@ export class PollsService extends BasicRepositoryService {
   constructor(
     @InjectRepository(Poll)
     private pollRepository: Repository<Poll>,
+    @InjectRepository(Vote)
+    private voteRepository: Repository<Vote>,
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     @InjectRedis() private readonly redis: Redis,
@@ -69,11 +71,11 @@ export class PollsService extends BasicRepositoryService {
               id: elected.id,
               username: elected.username,
             });
-            
+
             if (electedUser.id == user.id)
               throw new BadRequestException("You can't vote for yourself!");
 
-            return electedUser; 
+            return electedUser;
           }),
         ),
       });
@@ -81,6 +83,13 @@ export class PollsService extends BasicRepositoryService {
 
     for (let vote of pollVotes) {
       vote.electeds.forEach(async (elected) => {
+        await this.voteRepository.create({
+          points: vote.points,
+          poll: poll,
+          voted_by: user,
+          voted_for: elected,
+        });
+
         await this.addScore(pollId, elected.id, vote.points);
       });
     }
