@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PollEntity } from './poll.entity';
@@ -25,7 +24,7 @@ export class VotesEntity {
   @JoinColumn({ name: 'votedBy', referencedColumnName: 'id' })
   voted_by: UserEntity;
 
-  @OneToOne(() => UserEntity, { eager: true })
+  @ManyToOne(() => UserEntity, { eager: true })
   @JoinColumn({ name: 'votedFor', referencedColumnName: 'id' })
   voted_for: UserEntity;
 
