@@ -50,32 +50,34 @@ export class UsersService extends BasicRepositoryService {
       { osuId: userClause.id },
     ]);
 
-    if (!user)
+    if (!user) {
+      const userBancho = await v2.user.details(userClause.id, 'osu');
+
       user = await this.createUser({
         username: userClause.username,
         osuId: userClause.id,
+        country: userBancho.country_code,
       });
+    }
 
     return user;
   }
 
   async findBanchoUser(query: string): Promise<BanchoUserResponse[]> {
-    const ret: BanchoUserResponse[] = [];
     const response = await v2.site.search({
       mode: 'user',
       query: query,
     });
+    const filteredResponse = response.user.data.filter(
+      (user) => user.country_code == 'UA',
+    );
 
-    for (let user of response.user.data) {
-      if (user.country_code !== 'UA') continue;
-
-      ret.push({
+    return filteredResponse.map((user) => {
+      return {
         id: user.id,
         username: user.username,
         avatar_url: user.avatar_url,
-      });
-    }
-
-    return ret;
+      };
+    });
   }
 }

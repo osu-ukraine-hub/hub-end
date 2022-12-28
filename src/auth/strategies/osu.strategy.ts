@@ -28,6 +28,7 @@ export default class OsuStrategy extends PassportStrategy(Strategy.default) {
     const createUserDto: CreateUserDto = {
       username: profile.displayName,
       osuId: profile.id,
+      country: profile._json['country_code'],
     };
 
     return this.authService.authorize(createUserDto);

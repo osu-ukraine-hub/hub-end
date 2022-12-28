@@ -5,7 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import entities from './entities';
+import entities, { UserEntity } from './entities';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TournamentsController } from './tournaments/tournaments.controller';
 import { TournamentsModule } from './tournaments/tournaments.module';
@@ -47,6 +47,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
     TournamentsModule,
     NewsModule,
     PollsModule,
+    TypeOrmModule.forFeature([UserEntity])
   ],
   controllers: [UsersController, TournamentsController],
   providers: [

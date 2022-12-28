@@ -9,6 +9,7 @@ import { Poll, UserEntity, Vote } from 'src/entities';
 import BasicRepositoryService from 'src/types/basicRepositoryService';
 import Leaderboard from 'src/types/parsedLeaderboard';
 import { UsersService } from 'src/users/users.service';
+import { DeepSet } from 'src/utils';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -59,11 +60,11 @@ export class PollsService extends BasicRepositoryService {
     if (poll.participants.find((participant) => participant.id == user.id))
       throw new BadRequestException('This user have already voted!');
 
-    const pollVotes: { points: number; electeds: UserEntity[] }[] = [];
+    const pollVotes: DeepSet<{ points: number; electeds: UserEntity[] }> = new DeepSet();
     for (let key in pollVoteDto) {
       let electeds: PollVoteUser[] = pollVoteDto[key];
 
-      pollVotes.push({
+      pollVotes.add({
         points: parseInt(key.at(6)),
         electeds: await Promise.all(
           electeds.map(async (elected) => {
@@ -71,6 +72,9 @@ export class PollsService extends BasicRepositoryService {
               id: elected.id,
               username: elected.username,
             });
+            
+            if (electedUser.country !== "UA") 
+              throw new BadRequestException("You can only vote for players with Ukrainian flag!") 
 
             if (electedUser.id == user.id)
               throw new BadRequestException("You can't vote for yourself!");
@@ -82,7 +86,7 @@ export class PollsService extends BasicRepositoryService {
     }
 
     const votesToSave: Vote[] = [];
-    for (let vote of pollVotes) {
+    for (let vote of pollVotes.values()) {
       vote.electeds.forEach(async (elected) => {
         votesToSave.push(
           this.voteRepository.create({

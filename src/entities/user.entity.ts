@@ -30,6 +30,12 @@ export class UserEntity {
   })
   username: string;
 
+  @Column({
+    nullable: false,
+    default: 'XX',
+  })
+  country: string;
+
   @Exclude()
   @Column({
     name: 'email_address',
