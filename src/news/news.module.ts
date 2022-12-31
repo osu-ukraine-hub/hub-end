@@ -10,6 +10,5 @@ import { NewsService } from './news.service';
   imports: [TypeOrmModule.forFeature([NewsEntity, UserEntity])],
   controllers: [NewsController],
   providers: [NewsService, UsersService],
-  exports: [UsersService]
 })
 export class NewsModule {}

@@ -12,6 +12,7 @@ import { TournamentsModule } from './tournaments/tournaments.module';
 import { NewsModule } from './news/news.module';
 import { PollsModule } from './polls/polls.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ErrorsModule } from './erors/errors.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
     TournamentsModule,
     NewsModule,
     PollsModule,
-    TypeOrmModule.forFeature([UserEntity])
+    TypeOrmModule.forFeature([UserEntity]),
+    ErrorsModule
   ],
   controllers: [UsersController, TournamentsController],
   providers: [

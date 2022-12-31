@@ -33,6 +33,6 @@ export class PollEntity {
   @Column({ type: 'timestamptz' })
   expires_at: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 }

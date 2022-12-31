@@ -32,6 +32,6 @@ export class VotesEntity {
   @JoinColumn({ name: 'pollVoted', referencedColumnName: 'id' })
   poll: PollEntity;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 }

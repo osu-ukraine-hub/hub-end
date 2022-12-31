@@ -25,6 +25,6 @@ export class NewsEntity {
   @Column('boolean')
   pinned: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
 }
