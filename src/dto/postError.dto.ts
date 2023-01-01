@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export default class PostErrorDto {    
   @IsNotEmpty()
@@ -16,11 +16,11 @@ export default class PostErrorDto {
 
   @IsOptional()
   @IsNotEmpty()
-  @IsString()
-  lineNo?: string;
+  @IsNumber()
+  lineNo?: number;
 
   @IsOptional()
   @IsNotEmpty()
-  @IsString()
-  columnNo?: string;
+  @IsNumber()
+  columnNo?: number;
 }
