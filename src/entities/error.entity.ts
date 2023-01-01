@@ -33,16 +33,16 @@ export class ErrorEntity {
   url: string;
 
   @Column({
-    type: 'text',
+    type: 'number',
     nullable: true,
   })
-  lineNo: string;
+  lineNo: number;
 
   @Column({
-    type: 'text',
+    type: 'number',
     nullable: true,
   })
-  columnNo: string;
+  columnNo: number;
 
   @CreateDateColumn({ type: 'timestamptz' })
   created_at: Date;
