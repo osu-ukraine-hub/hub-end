@@ -33,13 +33,11 @@ export class ErrorEntity {
   url: string;
 
   @Column({
-    type: 'number',
     nullable: true,
   })
   lineNo: number;
 
   @Column({
-    type: 'number',
     nullable: true,
   })
   columnNo: number;
